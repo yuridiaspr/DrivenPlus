@@ -1,0 +1,9 @@
+export const BackgroundColor = "black";
+export const BackgroundColorInside = "#0E0E13";
+export const MainColor = "#FF4791";
+export const FormTextColor = "#7E7E7E";
+export const TextColor = "#FFFFFF";
+export const ColorPlus = "#FFFFFF";
+export const ColorGold = "#FFF16F";
+export const ColorPlatinum = "#56D59F";
+export const ButtonNo = "#CECECE";
