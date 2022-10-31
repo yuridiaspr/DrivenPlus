@@ -14,6 +14,7 @@ function App() {
 
   const [Token, setToken] = useState(tokenOnLocalStorage);
   const [ID, setID] = useState(1);
+  const [Name, setName] = useState("Fulano");
 
   function setAndPersistToken(TokenRecived) {
     setToken(TokenRecived);
@@ -25,7 +26,12 @@ function App() {
       <BrowserRouter>
         <GlobalStyle />
         <Routes>
-          <Route path="/" element={<Login setToken={setToken} />} />
+          <Route
+            path="/"
+            element={
+              <Login setToken={setToken} setID={setID} setName={setName} />
+            }
+          />
           <Route path="/sign-up" element={<SignUp />} />
           <Route
             path="/subscriptions"
@@ -43,7 +49,7 @@ function App() {
             path="/subscriptions/3"
             element={<Plans Token={Token} ID={ID} />}
           />
-          <Route path="/home" element={<Home Token={Token} />} />
+          <Route path="/home" element={<Home Token={Token} Name={Name} />} />
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>

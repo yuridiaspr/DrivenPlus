@@ -66,7 +66,7 @@ export const AllOptions = styled.div`
   padding-bottom: 4px;
 `;
 
-export const Button = styled.button`
+export const Button = styled.a`
   width: 299px;
   height: 52px;
   border-radius: 8px;
@@ -75,6 +75,9 @@ export const Button = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
+  :link {
+    text-decoration: none;
+  }
 
   font-family: "Roboto", sans-serif;
   font-style: normal;

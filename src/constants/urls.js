@@ -12,3 +12,6 @@ export const UrlLogin =
 
 export const UrlMemberships =
   "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships";
+
+export const UrlSubscriptions =
+  "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions";

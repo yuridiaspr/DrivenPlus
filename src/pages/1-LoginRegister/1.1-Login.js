@@ -5,7 +5,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Login({ setToken }) {
+export default function Login({ setToken, setID, setName }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -23,12 +23,14 @@ export default function Login({ setToken }) {
       setIsLoading(false);
       setToken(res.data.token);
       localStorage.setItem("token", res.data.token);
-      console.log(res.data);
-      console.log("res.data.membership", res.data.membership);
+      setName(res.data.name);
 
       if (res.data.membership == null) {
         navigate("/subscriptions");
       } else {
+        console.log(res.data.membership.id, "Passei no ID");
+        setID(res.data.membership.id);
+        console.log("ID no login", res.data.membership.id);
         navigate("/home");
       }
     });

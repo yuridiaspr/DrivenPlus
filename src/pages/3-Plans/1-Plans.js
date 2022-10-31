@@ -10,14 +10,13 @@ import {
   BlackScreen,
   Confirmation,
 } from "./2-Styled";
-import LogoPlus from "../../assets/images/Logo+Plus.svg";
 import LogoBenefits from "../../assets/images/benefits.svg";
 import LogoPrice from "../../assets/images/price.svg";
 import { Price } from "../../constants/urls";
 import ButtonBack from "../../assets/images/Back.svg";
 import ButtonQuit from "../../assets/images/Quit.svg";
 import { useNavigate } from "react-router-dom";
-import { UrlMemberships } from "../../constants/urls";
+import { UrlMemberships, UrlSubscriptions } from "../../constants/urls";
 import axios from "axios";
 
 import { useState, useEffect } from "react";
@@ -26,6 +25,13 @@ export default function Plans({ Token, ID }) {
   const navigate = useNavigate();
 
   const [isConfirmation, setisConfirmation] = useState(false);
+  const [formData, setFormData] = useState({
+    membershipId: 1,
+    cardName: "",
+    cardNumber: "",
+    securityNumber: "",
+    expirationDate: "",
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [Itens, setItens] = useState({});
 
@@ -43,7 +49,6 @@ export default function Plans({ Token, ID }) {
     promisse.then((res) => {
       setIsLoading(false);
       setItens(res.data);
-      console.log("res.data", res.data);
     });
 
     promisse.catch((err) => {
@@ -51,6 +56,28 @@ export default function Plans({ Token, ID }) {
       setIsLoading(false);
     });
   }, []);
+
+  function handleChange(e) {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  function Buy(e) {
+    e.preventDefault();
+    console.log("event", e);
+    const URL = UrlSubscriptions;
+    const promise = axios.post(URL, formData, config);
+    setIsLoading(true);
+    promise.then((res) => {
+      setIsLoading(false);
+      console.log("res.data", res.data);
+      navigate("/home");
+    });
+    promise.catch((err) => {
+      setIsLoading(false);
+      alert(err.response.data.message);
+      alert(err.response.data.details);
+    });
+  }
 
   function Volver() {
     navigate("/subscriptions");
@@ -83,38 +110,58 @@ export default function Plans({ Token, ID }) {
             <p>R$ {Itens.price} cobrados mensalmente</p>
           </PriceContainer>
           <Input
-            name="email"
-            // value={form.email}
-            // onChange={handleForm}
             type="text"
-            placeholder="Nome impresso no cartão"
+            placeholder="Nome"
+            name="cardName"
+            onChange={handleChange}
+            value={formData.cardName}
+            disabled={isLoading}
+            // required
           />
           <Input
-            name="email"
-            // value={form.email}
-            // onChange={handleForm}
-            type="text"
+            type="number"
             placeholder="Dígitos do cartão"
+            name="cardNumber"
+            onChange={handleChange}
+            value={formData.cardNumber}
+            disabled={isLoading}
+            // required
           />
           <InputSecurity>
             <input
-              name="email"
-              // value={form.email}
-              // onChange={handleForm}
-              type="text"
+              type="number"
               placeholder="Código de segurança"
+              name="securityNumber"
+              onChange={handleChange}
+              value={formData.securityNumber}
+              disabled={isLoading}
+              // required
             />
             <input
-              name="email"
-              // value={form.email}
-              // onChange={handleForm}
-              type="text"
-              placeholder="Validade"
+              type="date"
+              placeholder="validade"
+              name="expirationDate"
+              onChange={handleChange}
+              value={formData.expirationDate}
+              disabled={isLoading}
+              // required
             />
           </InputSecurity>
           <Button onClick={() => setisConfirmation(true)}>ASSINAR</Button>
         </Container>
       )}
+      <BlackScreen isConfirmation={isConfirmation}>
+        <Confirmation>
+          <p>
+            Tem certeza que deseja assinar o plano Driven Plus (R$ {Itens.price}
+            )?
+          </p>
+          <div>
+            <button onClick={() => setisConfirmation(false)}>Não</button>
+            <button onClick={(e) => Buy(e)}>Sim</button>
+          </div>
+        </Confirmation>
+      </BlackScreen>
       <ButtonBackContainer
         onClick={() => Volver()}
         src={ButtonBack}
@@ -126,17 +173,6 @@ export default function Plans({ Token, ID }) {
         src={ButtonQuit}
         alt="Button Quit"
       />
-      <BlackScreen isConfirmation={isConfirmation}>
-        <Confirmation>
-          <p>
-            Tem certeza que deseja assinar o plano Driven Plus ({Price.plus})?
-          </p>
-          <div>
-            <button onClick={() => setisConfirmation(false)}>Não</button>
-            <button>Sim</button>
-          </div>
-        </Confirmation>
-      </BlackScreen>
     </>
   );
 }
