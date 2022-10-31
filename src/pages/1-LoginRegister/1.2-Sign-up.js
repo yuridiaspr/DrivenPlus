@@ -1,49 +1,79 @@
 import { Container, Input, Button, StyledLink } from "./1.3-Styled";
-
-function login() {
-  // const URL = "https://mock-api.driven.com.br/api/v2/camppi/auth/login"
-  // const promise = axios.post(URL, form)
-  // promise.then((res) => {
-  //   setToken(res.data.token)
-  //   setUser(res.data)
-  //   navigate("/market")
-  // })
-  // promise.catch((err) => alert(err.response.data.message))
-}
+import { UrlRegister } from "../../constants/urls";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    name: "",
+    cpf: "",
+    password: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleChange(e) {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  function Register() {
+    const URL = UrlRegister;
+    setIsLoading(true);
+    const promise = axios.post(URL, formData);
+    promise.then((res) => {
+      setIsLoading(false);
+      navigate("/");
+    });
+    promise.catch((err) => {
+      alert(err.response.data.message);
+      setIsLoading(false);
+    });
+    promise.catch((err) => alert(err.response.data.details));
+  }
+
   return (
     <Container>
       <Input
-        name="name"
-        // value={form.name}
-        // onChange={handleForm}
         type="text"
         placeholder="Nome"
+        name="name"
+        onChange={handleChange}
+        value={formData.name}
+        disabled={isLoading}
+        required
       />
       <Input
-        name="CPF"
-        // value={form.image}
-        // onChange={handleForm}
-        type="text"
+        type="number"
         placeholder="CPF"
+        name="cpf"
+        onChange={handleChange}
+        value={formData.cpf}
+        disabled={isLoading}
+        required
       />
       <Input
-        name="email"
-        // value={form.email}
-        // onChange={handleForm}
-        type="text"
+        type="email"
         placeholder="E-mail"
+        name="email"
+        onChange={handleChange}
+        value={formData.email}
+        disabled={isLoading}
+        required
       />
       <Input
-        name="password"
-        // value={form.password}
-        // onChange={handleForm}
         type="password"
         placeholder="Senha"
+        name="password"
+        onChange={handleChange}
+        value={formData.password}
+        disabled={isLoading}
+        required
       />
-      <Button onClick={login}>Entrar</Button>
-      <StyledLink to="/">Não possui uma conta? Cadastre-se</StyledLink>
+      <Button onClick={Register}> {isLoading ? "Loading" : "Cadastrar"}</Button>
+      <StyledLink to="/">Já tem uma conta? Faça o login</StyledLink>
     </Container>
   );
 }

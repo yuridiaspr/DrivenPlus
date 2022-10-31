@@ -4,39 +4,59 @@ import LogoGold from "../../assets/images/Logo+Gold.svg";
 import LogoPlatinum from "../../assets/images/Logo+Platinum.svg";
 import { ColorPlus, ColorGold, ColorPlatinum } from "../../constants/colors";
 import { Price } from "../../constants/urls";
+import { UrlMemberships } from "../../constants/urls";
+import { useState, useContext, useEffect } from "react";
 
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function Subscriptions() {
+export default function Subscriptions({ Token }) {
   const navigate = useNavigate();
 
-  function plan1() {
-    navigate("/subscriptions/1");
-  }
+  const [isLoading, setIsLoading] = useState(true);
+  const [Itens, setItens] = useState({});
 
-  function plan2() {
-    navigate("/subscriptions/2");
-  }
+  const config = {
+    headers: {
+      Authorization: `Bearer ${Token}`,
+    },
+  };
+  console.log("Inicio");
+  useEffect(() => {
+    console.log("UseEffect");
+    const promisse = axios.get(UrlMemberships, config);
+    setIsLoading(true);
 
-  function plan3() {
-    navigate("/subscriptions/3");
+    promisse.then((res) => {
+      setIsLoading(false);
+      setItens(res.data);
+    });
+
+    promisse.catch((err) => {
+      alert(err.response.data.message);
+      setIsLoading(false);
+    });
+  }, []);
+
+  function plan(id) {
+    navigate(`/subscriptions/${id}`);
   }
 
   return (
-    <Container>
-      <p>Escolha seu Plano</p>
-      <Plan onClick={plan1}>
-        <img alt="Logo Plus" src={LogoPlus} />
-        <p>{Price.plus}</p>
-      </Plan>
-      <Plan onClick={plan2}>
-        <img alt="Logo Gold" src={LogoGold} />
-        <p>{Price.gold}</p>
-      </Plan>
-      <Plan onClick={plan3}>
-        <img alt="Logo Platinum" src={LogoPlatinum} />
-        <p>{Price.platinum}</p>
-      </Plan>
-    </Container>
+    <>
+      {isLoading ? (
+        "Loading"
+      ) : (
+        <Container>
+          <p>Escolha seu Plano</p>
+          {Itens.map((c) => (
+            <Plan onClick={() => plan(c.id)}>
+              <img alt="Logo" src={c.image} />
+              <p>R$ {c.price}</p>
+            </Plan>
+          ))}
+        </Container>
+      )}
+    </>
   );
 }
