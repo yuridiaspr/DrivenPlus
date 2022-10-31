@@ -30,7 +30,7 @@ export const Container = styled.div`
     height: 95.13327026367188px;
     width: 139.37762451171875px;
     border-radius: 0px;
-    margin-top: 87px;
+    margin-top: 80px;
   }
 `;
 
@@ -187,6 +187,7 @@ export const ButtonBackContainer = styled.img`
 `;
 
 export const ButtonQuitContainer = styled.img`
+  display: ${(props) => (props.isConfirmation ? `initial` : `none`)};
   position: absolute;
   height: 24.5px;
   width: 28px;
@@ -198,7 +199,8 @@ export const ButtonQuitContainer = styled.img`
 `;
 
 export const BlackScreen = styled.div`
-  display: flex;
+  display: ${(props) => (props.isConfirmation ? `flex` : `none`)};
+
   justify-content: center;
   align-items: center;
   background-color: pink;
